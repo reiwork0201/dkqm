@@ -8,8 +8,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup QEMU
-      　uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v2
 
       - name: Build Docker image
         run: docker build -t armel-native .
@@ -17,8 +18,6 @@ jobs:
       - name: Build and test inside Docker
         run: |
           docker run --rm -v ${{ github.workspace }}:/work armel-native bash -c "
-            # armel環境内でhello.cコンパイル
             arm-linux-gnueabi-gcc --sysroot=/armel-rootfs -o /work/hello_armel /work/hello.c
-            # chrootして動かす
             chroot /armel-rootfs /usr/bin/qemu-arm-static /work/hello_armel
           "
