@@ -1,23 +1,15 @@
 FROM debian:bullseye-slim
 
-RUN apt-get update && apt-get install -y \
-    debootstrap \
-    qemu-user-static \
-    binutils-arm-linux-gnueabi \
-    gcc-10-arm-linux-gnueabi \
-    g++-10-arm-linux-gnueabi \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y debootstrap qemu-user-static
 
 ENV SYSROOT=/armel-rootfs
-
 RUN mkdir -p $SYSROOT
 
-# QEMUバイナリはホスト側で登録済みなのでここでdebootstrapを実行可能
-RUN debootstrap --arch=armel bullseye $SYSROOT http://archive.debian.org/debian
+# QEMUはGitHub Actions側で登録済みとして
+RUN debootstrap --arch=armel --no-check-gpg bullseye $SYSROOT http://archive.debian.org/debian
 
-# qemu-arm-staticをrootfsにコピー（動作テスト用）
+# apt の期限切れ警告回避設定
+RUN echo "deb http://archive.debian.org/debian bullseye main contrib non-free" > $SYSROOT/etc/apt/sources.list && \
+    echo 'Acquire::Check-Valid-Until "false";' > $SYSROOT/etc/apt/apt.conf.d/99no-check-valid-until
+
 RUN cp /usr/bin/qemu-arm-static $SYSROOT/usr/bin/
-
-WORKDIR /work
-CMD ["/bin/bash"]
