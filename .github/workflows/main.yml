@@ -8,6 +8,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Setup QEMU
+      　uses: docker/setup-qemu-action@v2
 
       - name: Build Docker image
         run: docker build -t armel-native .
