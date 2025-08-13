@@ -11,15 +11,3 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t armel-builder .
-jobs:
-on: push
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Build Docker image
-        run: docker build -t armel-builder .
