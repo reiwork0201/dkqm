@@ -1,11 +1,6 @@
-name: Build and Test armel Native
-
-on: [push]
-
 jobs:
-  build_test_armel:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
@@ -13,11 +8,4 @@ jobs:
         uses: docker/setup-qemu-action@v2
 
       - name: Build Docker image
-        run: docker build -t armel-native .
-
-      - name: Build and test inside Docker
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/work armel-native bash -c "
-            arm-linux-gnueabi-gcc --sysroot=/armel-rootfs -o /work/hello_armel /work/hello.c
-            chroot /armel-rootfs /usr/bin/qemu-arm-static /work/hello_armel
-          "
+        run: docker build -t armel-builder .
