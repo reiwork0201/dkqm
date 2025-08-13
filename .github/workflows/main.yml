@@ -1,0 +1,22 @@
+name: Build and Test armel Native
+
+on: [push]
+
+jobs:
+  build_test_armel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t armel-native .
+
+      - name: Build and test inside Docker
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/work armel-native bash -c "
+            # armel環境内でhello.cコンパイル
+            arm-linux-gnueabi-gcc --sysroot=/armel-rootfs -o /work/hello_armel /work/hello.c
+            # chrootして動かす
+            chroot /armel-rootfs /usr/bin/qemu-arm-static /work/hello_armel
+          "
