@@ -14,7 +14,7 @@ ENV SYSROOT=/armel-rootfs
 RUN mkdir -p $SYSROOT
 
 # QEMUバイナリはホスト側で登録済みなのでここでdebootstrapを実行可能
-RUN debootstrap --arch=armel bullseye $SYSROOT http://deb.debian.org/debian
+RUN debootstrap --arch=armel bullseye $SYSROOT http://archive.debian.org/debian
 
 # qemu-arm-staticをrootfsにコピー（動作テスト用）
 RUN cp /usr/bin/qemu-arm-static $SYSROOT/usr/bin/
