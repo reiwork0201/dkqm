@@ -6,8 +6,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@v2
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t armel-builder .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/armel-builder:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository_owner }}/armel-builder:latest
